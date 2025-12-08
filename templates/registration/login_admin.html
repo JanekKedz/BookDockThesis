@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="register-container">
+    <h2 class="register-title">Admin Login</h2>
+    <form method="post" id="login-form" class="register-form_admin">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="register-button">Login</button>
+    </form>
+</div>
+
+{% block extra_js %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('login_admin script loaded');
+
+    const form = document.getElementById('login-form');
+    if (!form) {
+        console.error('login-form element NOT FOUND');
+        return;
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log('login-form submit handler fired');
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const BACKEND_API_BASE = "{{ backend_base }}";
+
+        // 1) Ask Spring backend for the user
+        fetch(`${BACKEND_API_BASE}/users`, {
+            method: 'GET',
+            headers: {
+                'Authorization': email
+            }
+        })
+        .then(response => {
+            console.log('GET /users status:', response.status);
+            if (!response.ok) {
+                throw new Error(`Backend /users failed: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Backend /users JSON:', JSON.stringify(data, null, 2));
+
+            const role = (data.role || '').toUpperCase().trim();
+            if (role !== 'ADMIN') {
+                alert('You are not an admin.');
+                return null;
+            }
+
+            // 2) Tell Django to log this user in
+            return fetch("{% url 'custom_login' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie('csrftoken')
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    username: data.username || data.email,
+                    email: data.email,
+                    password: data.password,
+                    name: data.name,
+                    surname: data.surname,
+                    phoneNumber: data.phoneNumber,
+                    role: data.role
+                })
+            });
+        })
+        .then(response => {
+            if (!response) return;  // non-admin case
+
+            console.log('POST /api/custom_login/ status:', response.status);
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('custom_login failed:', response.status, text);
+                    alert('Login failed.');
+                });
+            }
+
+            // 3) Redirect after successful Django login
+            window.location.href = "{% url 'docks' %}";
+        })
+        .catch(error => {
+            console.error('Login error:', error);
+            alert('Login failed.');
+        });
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
+
+{% endblock %}

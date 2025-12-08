@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="profile-container">
+    <h2>My Posts</h2>
+
+    <form method="get" class="search" style="margin: 20px auto; text-align: center;">
+        {{ form.as_p }}
+        <button type="submit" class="btn view-details-btn" style="margin-left: 10px;">Search</button>
+    </form>
+
+    <div class="tab-container">
+        <button class="tab-button active" data-tab="published">Published</button>
+        <button class="tab-button" data-tab="drafts">To be Accepted</button>
+    </div>
+
+    <!-- published -->
+    <div id="published" class="tab-content active">
+        {% if published_posts %}
+            <section class="recipe-grid">
+                {% for guide in published_posts %}
+                    <article class="recipe-card">
+                        <h3>{{ guide.title }} <small>({{ guide.guideCategory|title }})</small></h3>
+                        <p class="date">Published: {{ guide.publicationDate|date:"Y-m-d H:i" }}</p>
+                        {% if guide.image_urls and guide.image_urls.0 %}
+                          <img src="{{ guide.image_urls.0 }}" alt="{{ guide.title }} image" class="recipe-image">
+                        {% endif %}
+                        <p>{{ guide.content|truncatewords:30 }}</p>
+                        <a href="{% url 'guide_detail_editor' guide.id %}">View Post</a>
+                        <a href="{% url 'delete_guide' guide.id %}" class="delete-link">Delete</a>
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <p>No published posts yet.</p>
+        {% endif %}
+    </div>
+
+    <div id="drafts" class="tab-content">
+        {% if unpublished_posts %}
+            <section class="recipe-grid">
+                {% for guide in unpublished_posts %}
+                    <article class="recipe-card">
+                        <h3>{{ guide.title }} <small>({{ guide.guideCategory|title }})</small></h3>
+                        {% if guide.image_urls and guide.image_urls.0 %}
+                          <img src="{{ guide.image_urls.0 }}" alt="{{ guide.title }} image" class="recipe-image">
+                        {% endif %}
+                        <p>{{ guide.content|truncatewords:30 }}</p>
+                        <a href="{% url 'guide_detail_editor' guide.id %}">View Guide</a>
+                        <a href="{% url 'accept_guide' guide.id %}" class="edit-link">Accept</a>
+                        <a href="{% url 'delete_guide' guide.id %}" class="delete-link">Discard</a>
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <p>No posts waiting for acceptance.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+    <script src="{% static 'profile.js' %}"></script>
+{% endblock %}
+{% endblock %}

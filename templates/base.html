@@ -1,0 +1,76 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}{% endblock %} | Book&Dock Project
+    </title>
+    <link rel="stylesheet" href="{% static 'styleboats.css' %}">
+    <script src="{% static 'base_script.js' %}"></script>
+</head>
+<body>
+<header>
+    <nav>
+    <!-- DEBUG: role = {{ request.session.role|default:"<none>" }} -->
+        {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        Profile <span>👤</span>
+                    </button>
+                    <div class="dropdown-content">
+
+                        {% if request.session.role == 'EDITOR' %}
+                            <a href="{% url 'profile_guides' %}">Guides</a>
+                            <a href="{% url 'profile_articles' %}">Articles</a>
+                        {% endif %}
+
+                        {% if request.session.role == 'ADMIN' %}
+                            <a href="{% url 'users' %}"> Users</a>
+                            <a href="{% url 'docks' %}">Docks</a>
+                            <a href="{% url 'manage_guides' %}">Guides</a>
+                            <a href="{% url 'bookings' %}"> Bookings </a>
+                        {% endif %}
+                        <a href="{% url 'account' %}">Account</a>
+                    </div>
+                </div>
+        {% else %}
+                <a href="{% url 'about' %}">
+                    <span>About</span>
+                    <span>ℹ️</span>
+                </a>
+        {% endif %}
+        <a href="{% url 'home' %}">
+                <img src="{% static 'boat.png' %}" alt="Cooking Project Logo" class="logo">
+        </a>
+        {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}">
+                    <span>Logout</span>
+                    <span>⤷</span>
+                </a>
+            {% else %}
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        Login <span>👤</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'login_admin' %}">
+                            Login admin
+                        </a>
+                        <a href="{% url 'login' %}">
+                            Login editor
+                        </a>
+                    </div>
+                </div>
+        {% endif %}
+    </nav>
+</header>
+<main>
+    {% block content %}{% endblock %}
+</main>
+<footer>
+    &copy; {% now "Y" %} Book&Dock • Powered by <a href="https://www.djangoproject.com">Django</a>
+</footer>
+</body>
+</html>

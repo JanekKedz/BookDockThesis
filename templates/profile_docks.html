@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="profile-container">
+    <h2>All Docks</h2>
+
+    <form method="get" class="search" style="margin: 20px auto; text-align: center;">
+        {{ form.as_p }}
+        <button type="submit" class="btn view-details-btn" style="margin-left: 10px;">Search</button>
+    </form>
+
+    <!-- Tab Navigation -->
+    <div class="tab-container">
+        <button class="tab-button active" data-tab="published">Published Docks</button>
+        <button class="tab-button" data-tab="pending">Docks to be Accepted</button>
+    </div>
+
+    <div id="published" class="tab-content active">
+        {% if published_docks %}
+            <section class="recipe-grid">
+                {% for dock in published_docks %}
+                    <article class="recipe-card">
+                        <h2>{{ dock.name }}</h2>
+                        <p><strong>Location:</strong> {{ dock.location }}</p>
+                        <p>{{ dock.description }}</p>
+
+                        <a href="{% url 'dock_detail' dock.id %}">View Dock</a>
+                        <a href="{% url 'delete_dock' dock.id %}" class="delete-link">Delete</a>
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <p>No published docks yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Pending Docks Section -->
+    <div id="pending" class="tab-content">
+        {% if docks_to_be_accepted %}
+            <section class="recipe-grid">
+                {% for dock in docks_to_be_accepted %}
+                    <article class="recipe-card">
+                        <h2>{{ dock.name }}</h2>
+                        <p><strong>Location:</strong> {{ dock.location }}</p>
+                        <p>{{ dock.description }}</p>
+
+                        <a href="{% url 'dock_detail' dock.id %}">View Dock</a>
+                        <a href="{% url 'accept_dock' dock.id %}" class="accept-link">Accept</a>
+                        <a href="{% url 'delete_dock' dock.id %}" class="delete-link">Discard</a>
+                    </article>
+                {% endfor %}
+            </section>
+        {% else %}
+            <p>No docks waiting for acceptance.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% block extra_js %}
+    <script src="{% static 'profile.js' %}"></script>
+{% endblock %}
+{% endblock %}

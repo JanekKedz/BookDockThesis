@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Latest Guides & Articles
+{% endblock %}
+
+{% block content %}
+<h1>Latest Published Guides and Articles</h1>
+
+<form class="search">
+    {{ form }}
+</form>
+
+<section class="recipe-grid">
+    {% for item in published_items %}
+        <article class="recipe-card">
+            <h3>{{ item.title }} <small>({{ item.guideCategory|title }})</small></h3>
+
+            {% if item.image_urls and item.image_urls.0 %}
+                <img src="{{ item.image_urls.0 }}" alt="{{ item.title }} image">
+            {% endif %}
+        
+
+            {% if item.publicationDate %}
+                <p class="date">Published on: {{ item.publicationDate|date:"Y-m-d" }}</p>
+            {% elif item.created_at %}
+                <p class="date">Created on: {{ item.created_at|date:"Y-m-d" }}</p>
+            {% endif %}
+
+            <a href="{% url 'guide_detail_editor' item.id %}">View</a>
+        </article>
+    {% empty %}
+        <p>There are no published guides or articles yet.</p>
+    {% endfor %}
+</section>
+
+{% endblock %}

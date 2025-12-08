@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="register-container">
+    <h2 class="register-title">Editor Login</h2>
+    <form method="post" id="login-form" class="register-form_admin">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="register-button">Login</button>
+    </form>
+</div>
+
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('editor login script loaded');
+
+    const form = document.getElementById('login-form');
+    if (!form) {
+        console.error('editor login: #login-form not found');
+        return;
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log('editor login: submit fired');
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const BACKEND_API_BASE = "{{ backend_base }}";
+
+        // 1) Ask Spring backend for this user
+        fetch(`${BACKEND_API_BASE}/users`, {
+            method: 'GET',
+            headers: {
+                'Authorization': email
+            }
+        })
+        .then(response => {
+            console.log('editor GET /users status:', response.status);
+            if (!response.ok) {
+                throw new Error(`Backend /users failed: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('editor /users JSON:', JSON.stringify(data, null, 2));
+
+            const role = (data.role || '').toUpperCase().trim();
+            if (role !== 'EDITOR') {
+                alert('You are not an editor.');
+                return null; // stop chain
+            }
+
+            // 2) Tell Django to log this editor in
+            return fetch("{% url 'custom_login_editor' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie('csrftoken')
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    username: data.username || data.email,
+                    email: data.email,
+                    password: 'editor123',   // same as your old code
+                    name: data.name,
+                    surname: data.surname,
+                    phoneNumber: data.phoneNumber,
+                    role: data.role
+                })
+            });
+        })
+        .then(response => {
+            if (!response) return;  // non-editor case
+
+            console.log('POST /api/custom_login_editor/ status:', response.status);
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('custom_login_editor failed:', response.status, text);
+                    alert('Login failed.');
+                });
+            }
+
+            // 3) Redirect editor after successful Django login
+            window.location.href = "{% url 'profile_guides' %}";
+        })
+        .catch(error => {
+            console.error('Editor login error:', error);
+            alert('Login failed.');
+        });
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
+
+{% endblock %}
