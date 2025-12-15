@@ -33,13 +33,15 @@ public class PortDto {
     }
 
     // All-arguments constructor
-    public PortDto(Long id, String name, String location, String description, List<String> imageIds, Long ownerId) {
+    public PortDto(Long id, String name, String location, String description, List<String> imageIds, Long ownerId, Double longitude, Double latitude) {
             this.id = id;
             this.name = name;
             this.location = location;
             this.description = description;
             this.imageIds = imageIds;
             this.ownerId = ownerId;
+            this.longitude = longitude;
+            this.latitude = latitude;
         }
 
         // Getters and setters
