@@ -51,7 +51,7 @@ public class PortControllerTest {
     }
 
     private MvcResult createTestPort(String name) throws Exception {
-        PortDto portDto = new PortDto(null, name, "Gizycko", "Description", null, testDockOwnerId);
+        PortDto portDto = new PortDto(null, name, "Gizycko", "Description", null, testDockOwnerId, 00.00, 00.00);
         return mockMvc.perform(post("/ports")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createApiPayload("ports", portDto))))
@@ -61,7 +61,7 @@ public class PortControllerTest {
 
     @Test
     public void createPortTest() throws Exception {
-        PortDto portDto = new PortDto(null, "New Port 1", "Gizycko", "Description", null, testDockOwnerId);
+        PortDto portDto = new PortDto(null, "New Port 1", "Gizycko", "Description", null, testDockOwnerId, 00.00, 00.00);
         mockMvc.perform(post("/ports")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createApiPayload("ports", portDto))))
@@ -72,7 +72,7 @@ public class PortControllerTest {
     public void createExistingPortTest() throws Exception {
         createTestPort("Existing Port");
 
-        PortDto duplicateDto = new PortDto(null, "Existing Port", "Gizycko", "Description", null, testDockOwnerId);
+        PortDto duplicateDto = new PortDto(null, "Existing Port", "Gizycko", "Description", null, testDockOwnerId, 00.00, 00.00);
 
         mockMvc.perform(post("/ports")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,7 +102,7 @@ public class PortControllerTest {
         MvcResult creationResult = createTestPort("Initial Port Name");
         long portId = objectMapper.readTree(creationResult.getResponse().getContentAsString()).get("id").asLong();
 
-        PortDto updatedDto = new PortDto(null, "Updated Port Name", "Updated City", null, null, null);
+        PortDto updatedDto = new PortDto(null, "Updated Port Name", "Updated City", null, null, null, 00.00, 00.00);
 
         mockMvc.perform(put("/ports/" + portId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +113,7 @@ public class PortControllerTest {
     @Test
     public void updateNonExistingPortTest() throws Exception {
         long nonExistentId = 9999L;
-        PortDto portDto = new PortDto(null, "Non-existent", "City", null, null, null);
+        PortDto portDto = new PortDto(null, "Non-existent", "City", null, null, null, 00.00, 00.00);
 
         mockMvc.perform(put("/ports/" + nonExistentId)
                         .contentType(MediaType.APPLICATION_JSON)

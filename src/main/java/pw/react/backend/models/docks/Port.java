@@ -25,13 +25,14 @@ public class Port{
 
     private String name;
     private String location;
-    private String description;
 
     @Column(name = "latitude")
     private Double latitude;
 
     @Column(name = "longitude")
     private Double longitude;
+
+    private String description;
 
     @Column(name = "owner_id")
     private Long ownerId;

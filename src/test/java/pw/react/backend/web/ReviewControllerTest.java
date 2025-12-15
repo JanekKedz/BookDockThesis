@@ -63,7 +63,7 @@ public class ReviewControllerTest {
         this.testDockOwnerId = objectMapper.readTree(ownerResult.getResponse().getContentAsString()).get("id").asLong();
 
         // Create a port owned by the dock owner
-        PortDto portDto = new PortDto(null, "Test Port for Reviews", "Test City", "Desc", null, this.testDockOwnerId);
+        PortDto portDto = new PortDto(null, "Test Port for Reviews", "Test City", "Desc", null, this.testDockOwnerId, 00.00, 00.00);
         MvcResult portResult = mockMvc.perform(post("/ports")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createApiPayload("ports", portDto))))

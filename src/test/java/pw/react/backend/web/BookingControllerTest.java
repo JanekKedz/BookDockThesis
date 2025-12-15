@@ -62,7 +62,7 @@ public class BookingControllerTest {
                 .andReturn();
         this.testDockOwnerId = objectMapper.readTree(ownerResult.getResponse().getContentAsString()).get("id").asLong();
 
-        PortDto portDto = new PortDto(null, "Test Port", "Test City", "Desc", null, this.testDockOwnerId);
+        PortDto portDto = new PortDto(null, "Test Port", "Test City", "Desc", null, this.testDockOwnerId, 54.34, 22.44);
         MvcResult portResult = mockMvc.perform(post("/ports")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createApiPayload("ports", portDto))))

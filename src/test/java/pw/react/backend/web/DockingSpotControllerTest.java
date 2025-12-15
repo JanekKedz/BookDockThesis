@@ -51,7 +51,7 @@ public class DockingSpotControllerTest {
                 .andReturn();
         this.testDockOwnerId = objectMapper.readTree(ownerResult.getResponse().getContentAsString()).get("id").asLong();
 
-        PortDto portDto = new PortDto(null, "Test Port for Spots", "Test City", "Desc", null, this.testDockOwnerId);
+        PortDto portDto = new PortDto(null, "Test Port for Spots", "Test City", "Desc", null, this.testDockOwnerId, 54.23, 44.23);
         MvcResult portResult = mockMvc.perform(post("/ports")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createApiPayload("ports", portDto))))
