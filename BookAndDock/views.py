@@ -659,62 +659,51 @@ def custom_login_editor(request):
 
     try:
         data = json.loads(request.body.decode("utf-8"))
-        username = data.get('username') or data.get('email')
-        email = data.get('email')
-        password = data.get('password')
+
+        username   = data.get('username') or data.get('email')
+        email      = data.get('email')
         first_name = data.get('name', '') or ''
-        last_name = data.get('surname', '') or ''
-        raw_role = data.get('role')
+        last_name  = data.get('surname', '') or ''
+        raw_role   = data.get('role')
 
         safe_role = (raw_role or "").upper().strip()
         if safe_role != "EDITOR":
             return JsonResponse({"error": "Not an editor"}, status=403)
 
-        if not username or not email or not password:
-            return JsonResponse({"error": "Missing username, email, or password"}, status=400)
+        if not username or not email:
+            return JsonResponse({"error": "Missing username or email"}, status=400)
 
         User = get_user_model()
 
-        user = User.objects.filter(username=username).first()
+        user, created = User.objects.get_or_create(
+            username=username,
+            defaults={
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name,
+            },
+        )
 
-        if not user:
-            # Create new user and set password
-            user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-            )
-        else:
-            # Optional: update fields on existing user
-            changed = False
-            if user.email != email:
-                user.email = email
-                changed = True
-            if user.first_name != first_name:
-                user.first_name = first_name
-                changed = True
-            if user.last_name != last_name:
-                user.last_name = last_name
-                changed = True
-            if changed:
-                user.save()
+        # Keep fields in sync
+        changed = False
+        if user.email != email:
+            user.email = email
+            changed = True
+        if user.first_name != first_name:
+            user.first_name = first_name
+            changed = True
+        if user.last_name != last_name:
+            user.last_name = last_name
+            changed = True
+        if changed:
+            user.save()
 
-        # Authenticate user with username and password
-        user_auth = authenticate(request, username=username, password=password)
-        if user_auth is None:
-            return JsonResponse({"error": "Invalid username or password"}, status=401)
-
-        # Login authenticated user
-        login(request, user_auth)
+        login(request, user)
         request.session["role"] = "EDITOR"
 
         return JsonResponse({"message": "Logged in successfully"})
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         return JsonResponse({"error": f"{type(e).__name__}: {e}"}, status=500)
 
 @login_required
