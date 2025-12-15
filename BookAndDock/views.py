@@ -749,7 +749,7 @@ def dock_detail(request, dock_id):
         # Fetch dock details from backend
         dock_response = requests.get(f"{settings.BACKEND_API_BASE}/ports/{dock_id}")
         if dock_response.status_code != 200:
-            return HttpResponse("Failed to retrieve dock details", status=dock_response.status_code)
+            return HttpResponse("Failed to retrieve dock details / the dock may not exist anymore", status=dock_response.status_code)
         dock = dock_response.json()
 
         # (Optional placeholder - no dock spaces API yet)
@@ -889,7 +889,7 @@ def users(request):
 def ban_user(request, user_email):
     try:
         response = requests.delete(
-            "{settings.BACKEND_API_BASE}/users",
+            f"{settings.BACKEND_API_BASE}/users",
             headers={'Authorization': user_email}
         )
 
