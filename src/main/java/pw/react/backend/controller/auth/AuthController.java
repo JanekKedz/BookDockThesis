@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pw.react.backend.dao.UserRepository;
 import pw.react.backend.models.user.User;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -39,13 +40,14 @@ public class AuthController {
         }
 
         // return safe user payload (no password)
-        return ResponseEntity.ok(Map.of(
-                "email", user.getEmail(),
-                "username", user.getUsername(),
-                "name", user.getName(),
-                "surname", user.getSurname(),
-                "phoneNumber", user.getPhoneNumber(),
-                "role", user.getRole().toString()
-        ));
+        Map<String, Object> out = new HashMap<>();
+        out.put("email", user.getEmail());
+        out.put("username", user.getUsername());
+        out.put("name", user.getName());
+        out.put("surname", user.getSurname());
+        out.put("phoneNumber", user.getPhoneNumber());
+        out.put("role", user.getRole() != null ? user.getRole().name() : null);
+
+        return ResponseEntity.ok(out);
     }
 }
