@@ -31,8 +31,12 @@ public class AuthController {
         }
 
         User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null || user.isDeleted()) {
+        if (user == null) {
             return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
+        }
+
+        if (user.isDeleted()) {
+            return ResponseEntity.status(401).body(Map.of("error", "You have been banned by the admin for violating the rules of the service."));
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
