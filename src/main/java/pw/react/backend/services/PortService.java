@@ -30,6 +30,8 @@ public class PortService {
             port.setName(portDto.getName());
             port.setLocation(portDto.getLocation());
             port.setDescription(portDto.getDescription());
+            port.setLatitude(portDto.getLatitude());
+            port.setLongitude(portDto.getLongitude());
             return portRepository.save(port);
         } else {
             throw new IllegalArgumentException("Port with id " + id + " not found.");
@@ -60,6 +62,8 @@ public class PortService {
         port.setDescription(portDto.getDescription());
         port.setOwnerId(portDto.getOwnerId());
         port.setImageIds(portDto.getImageIds()); // This is crucial
+        port.setLatitude(portDto.getLatitude());
+        port.setLongitude(portDto.getLongitude());
         return port;
     }
     public Port approvePort(Long id) {

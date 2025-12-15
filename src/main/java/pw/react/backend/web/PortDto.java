@@ -24,6 +24,9 @@ public class PortDto {
     @Schema(description = "ID of the owner of the port", example = "42")
     private Long ownerId;
 
+    private Double latitude;
+    private Double longitude;
+
 
     // Default constructor
     public PortDto() {
@@ -87,4 +90,9 @@ public class PortDto {
         public void setImageIds(List<String> imageIds) {
             this.imageIds = imageIds;
         }
+
+        public Double getLatitude() {return latitude;}
+        public void setLatitude(Double latitude) {this.latitude = latitude;}
+        public Double getLongitude() {return longitude;}
+        public void setLongitude(Double longitude) {this.longitude = longitude;}
     }
