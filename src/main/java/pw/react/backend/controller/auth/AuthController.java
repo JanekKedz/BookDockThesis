@@ -41,6 +41,7 @@ public class AuthController {
 
         // return safe user payload (no password)
         Map<String, Object> out = new HashMap<>();
+        out.put("id", user.getUserId());
         out.put("email", user.getEmail());
         out.put("username", user.getUsername());
         out.put("name", user.getName());
