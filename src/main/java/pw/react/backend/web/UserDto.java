@@ -34,7 +34,16 @@ public record UserDto (
         boolean deleted) {
 
     public static UserDto valueFrom(User user) {
-        return new UserDto(user.getUserId(), user.getEmail(), user.getName(), user.getSurname(), user.getPhoneNumber(), user.getUsername(), user.getRole(), user.getPassword(), user.isDeleted());
+        return new UserDto(
+                user.getUserId(),
+                user.getEmail(),
+                user.getName(),
+                user.getSurname(),
+                user.getPhoneNumber(),
+                user.getUsername(),
+                user.getRole(),
+                null,
+                user.isDeleted());
     }
 
     public static User convertToUser(UserDto userDto) {

@@ -8,18 +8,24 @@ import pw.react.backend.exceptions.UserValidationException;
 import pw.react.backend.models.user.User;
 import pw.react.backend.services.verification.VerificationService;
 import pw.react.backend.web.UserDto;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Service
 public class UserMainService implements UserService {
+
+    private final PasswordEncoder passwordEncoder;
 
     protected final UserRepository userRepository;
 
-    public UserMainService(UserRepository userRepository) {
+    public UserMainService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public boolean emailFormat(String email) {
@@ -50,6 +56,8 @@ public class UserMainService implements UserService {
             throw new UnauthorizedException("User with phone number " + user.phoneNumber() + " already exists");
         }
         User newUser = UserDto.convertToUser(user);
+
+        newUser.setPassword(passwordEncoder.encode(user.password()));
         return userRepository.save(newUser);
     }
 
