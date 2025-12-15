@@ -1,0 +1,49 @@
+version: '3.8'
+
+networks:
+  application-network:
+    driver: bridge
+
+services:
+
+  mysqldb:
+    image: mysql:8.0.32
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'backend'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'MysqL12!@'
+      MYSQL_ROOT_PASSWORD: 'MysqL12!@'
+    ports:
+      - "3308:3306"
+    expose:
+      - '3306'
+    volumes:
+      - ../mysql_data:/var/lib/mysql
+    networks:
+      - application-network
+
+  spring-backend:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+#    image: reactbackend/backend-starter
+    environment:
+      CORS: http://localhost:8080,http://localhost:5000
+      SPRING_PROFILES_ACTIVE: mysql-docker,jwt,batch
+      TZ: Europe/Warsaw
+    command: start
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysqldb
+    networks:
+      - application-network
+#    volumes:
+#      - logs:/opt/keycloak/logs
+
+volumes:
+  mysql_data:
+    driver: local
+#  logs:
+#    driver: local
