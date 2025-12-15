@@ -37,46 +37,34 @@ document.addEventListener('DOMContentLoaded', function () {
         const BACKEND_API_BASE = "{{ backend_base }}";
 
         // 1) Ask Spring backend for this user
-        fetch(`${BACKEND_API_BASE}/users`, {
-            method: 'GET',
-            headers: {
-                'Authorization': email
-            }
+        fetch(`${BACKEND_API_BASE}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
         })
-        .then(response => {
-            console.log('editor GET /users status:', response.status);
-            if (!response.ok) {
-                throw new Error(`Backend /users failed: ${response.status}`);
-            }
-            return response.json();
+        .then(res => {
+          if (!res.ok) throw new Error("Invalid credentials");
+          return res.json();
         })
         .then(data => {
-            console.log('editor /users JSON:', JSON.stringify(data, null, 2));
+          const role = (data.role || '').toUpperCase().trim();
+          if (role !== "EDITOR") { alert("You are not an editor."); return; }
 
-            const role = (data.role || '').toUpperCase().trim();
-            if (role !== 'EDITOR') {
-                alert('You are not an editor.');
-                return null; // stop chain
-            }
-
-            // 2) Tell Django to log this editor in
-            return fetch("{% url 'custom_login_editor' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie('csrftoken')
-                },
-                credentials: "same-origin",
-                body: JSON.stringify({
-                    username: data.username || data.email,
-                    email: data.email,
-                    password: 'editor123',   // same as your old code
-                    name: data.name,
-                    surname: data.surname,
-                    phoneNumber: data.phoneNumber,
-                    role: data.role
-                })
-            });
+          return fetch("{% url 'custom_login_editor' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie('csrftoken')
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+              username: data.username || data.email,
+              email: data.email,
+              name: data.name,
+              surname: data.surname,
+              role: data.role
+            })
+          });
         })
         .then(response => {
             if (!response) return;  // non-editor case
