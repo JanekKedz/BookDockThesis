@@ -10,5 +10,6 @@ public class PasswordHashPrinter implements CommandLineRunner {
     public void run(String... args) {
         var enc = new BCryptPasswordEncoder();
         System.out.println("HASH([password]) = copy the following: " + enc.encode("1234"));
+        System.out.println("HASH([password]) = copy the following: " + enc.encode("1234"));
     }
 }

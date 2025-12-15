@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import pw.react.backend.models.docks.Port;
 import pw.react.backend.services.PortService;
 import pw.react.backend.web.PortDto;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/ports")
 public class PortController {
@@ -56,7 +58,10 @@ public class PortController {
 
     @GetMapping("/owners/{ownerId}")
     public ResponseEntity<List<Port>> getPortsByOwnerId(@PathVariable Long ownerId) {
+//        List<Port> ports = portService.getPortsByOwnerId(ownerId);
+        log.info("GET /ports/owners/{}", ownerId);
         List<Port> ports = portService.getPortsByOwnerId(ownerId);
+        log.info("Ports returned: {}", ports.size());
         return ResponseEntity.ok(ports);
     }
 }
