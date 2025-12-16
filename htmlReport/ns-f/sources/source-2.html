@@ -1,0 +1,90 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > VerificationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.services.verification</a>
+</div>
+
+<h1>Coverage Summary for Class: VerificationService (pw.react.backend.services.verification)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">VerificationService</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.services.verification;
+&nbsp;
+&nbsp;
+&nbsp;import pw.react.backend.models.user.User;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service interface for verifying users.
+&nbsp; * &lt;p&gt;
+&nbsp; * Implementations of this interface should verify the given user.
+&nbsp; * If the verification is successful, the method will return without any exception.
+&nbsp; * If the verification fails, the method will throw an appropriate exception depending on the implementation.
+&nbsp; */
+&nbsp;public interface VerificationService {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Verifies the given user.
+&nbsp;     *
+&nbsp;     * @param user the user to verify
+&nbsp;     * @throws Exception if the verification fails
+&nbsp;     */
+&nbsp;    void verifyUser(User user) throws Exception;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GuideController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: GuideController (pw.react.backend.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GuideController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    11,1%
+  </span>
+  <span class="absValue">
+    (1/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8,3%
+  </span>
+  <span class="absValue">
+    (1/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.controller;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import pw.react.backend.web.GuideDto;
+&nbsp;import pw.react.backend.services.GuideService;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/guides&quot;)
+<b class="fc">&nbsp;public class GuideController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private GuideService guideService;
+&nbsp;
+&nbsp;    @PostMapping
+&nbsp;    public ResponseEntity&lt;GuideDto&gt; createGuide(@RequestBody GuideDto dto) {
+<b class="nc">&nbsp;        GuideDto created = guideService.createGuide(dto);</b>
+<b class="nc">&nbsp;        return ResponseEntity.status(201).body(created);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping
+&nbsp;    public List&lt;GuideDto&gt; listAll() {
+<b class="nc">&nbsp;        return guideService.getAllGuides();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/approved&quot;)
+&nbsp;    public List&lt;GuideDto&gt; listApproved() {
+<b class="nc">&nbsp;        return guideService.getApprovedGuides();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/approve/{guideId}&quot;)
+&nbsp;    public ResponseEntity&lt;GuideDto&gt; approveGuide(@PathVariable Long guideId) {
+<b class="nc">&nbsp;        GuideDto approved = guideService.approveGuide(guideId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(approved);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/author/{authorId}&quot;)
+&nbsp;    public List&lt;GuideDto&gt; listByAuthor(@PathVariable Long authorId) {
+<b class="nc">&nbsp;        return guideService.getGuidesByAuthor(authorId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{guideId}&quot;)
+&nbsp;    public GuideDto getOne(@PathVariable Long guideId) {
+<b class="nc">&nbsp;        return guideService.getGuideById(guideId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{guideId}&quot;)
+&nbsp;    public GuideDto updateGuide(
+&nbsp;            @PathVariable Long guideId,
+&nbsp;            @RequestBody GuideDto dto) {
+<b class="nc">&nbsp;        return guideService.updateGuide(guideId, dto);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;/{guideId}&quot;)
+&nbsp;    public ResponseEntity&lt;Void&gt; deleteGuide(@PathVariable Long guideId) {
+<b class="nc">&nbsp;        guideService.deleteGuide(guideId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok().build();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

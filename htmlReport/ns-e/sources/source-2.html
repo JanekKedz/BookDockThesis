@@ -1,0 +1,285 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DockingSpotServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.services.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: DockingSpotServiceImpl (pw.react.backend.services.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DockingSpotServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    9,1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/41)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4,7%
+  </span>
+  <span class="absValue">
+    (3/64)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.services.impl;
+&nbsp;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import pw.react.backend.models.Booking;
+&nbsp;import pw.react.backend.models.docks.DockingSpots;
+&nbsp;import pw.react.backend.repositories.DockingSpotsRepository;
+&nbsp;import pw.react.backend.services.DockingSpotService;
+&nbsp;import pw.react.backend.repositories.BookingRepository;
+&nbsp;import pw.react.backend.web.DockingSpotDto;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Comparator;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;import java.util.stream.Stream;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class DockingSpotServiceImpl implements DockingSpotService {
+&nbsp;
+&nbsp;    private final DockingSpotsRepository dockingSpotsRepository;
+&nbsp;    private final BookingRepository bookingRepository;
+&nbsp;
+<b class="fc">&nbsp;    public DockingSpotServiceImpl(DockingSpotsRepository dockingSpotsRepository, BookingRepository bookingRepository) {</b>
+<b class="fc">&nbsp;        this.dockingSpotsRepository = dockingSpotsRepository;</b>
+<b class="fc">&nbsp;        this.bookingRepository = bookingRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DockingSpots createDockingSpot(DockingSpotDto dto) {
+<b class="nc">&nbsp;        DockingSpots dockingSpot = new DockingSpots();</b>
+<b class="nc">&nbsp;        dockingSpot.setName(dto.getName());</b>
+<b class="nc">&nbsp;        dockingSpot.setLocation(dto.getLocation());</b>
+<b class="nc">&nbsp;        dockingSpot.setDescription(dto.getDescription());</b>
+<b class="nc">&nbsp;        dockingSpot.setServices(dto.getServices());</b>
+<b class="nc">&nbsp;        dockingSpot.setServicesPricing(dto.getServicesPricing());</b>
+<b class="nc">&nbsp;        dockingSpot.setPricePerNight(dto.getPricePerNight());</b>
+<b class="nc">&nbsp;        dockingSpot.setPricePerPerson(dto.getPricePerPerson());</b>
+&nbsp;
+&nbsp;        // Instead of setting full objects, simply assign the IDs.
+<b class="nc">&nbsp;        dockingSpot.setOwnerId(dto.getOwnerId());</b>
+<b class="nc">&nbsp;        dockingSpot.setPortId(dto.getPortId());</b>
+&nbsp;
+<b class="nc">&nbsp;        return dockingSpotsRepository.save(dockingSpot);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DockingSpots updateDockingSpot(Long id, DockingSpotDto dto) {
+<b class="nc">&nbsp;        DockingSpots dockingSpot = dockingSpotsRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Docking spot not found with id: &quot; + id));</b>
+&nbsp;
+<b class="nc">&nbsp;        dockingSpot.setName(dto.getName());</b>
+<b class="nc">&nbsp;        dockingSpot.setLocation(dto.getLocation());</b>
+<b class="nc">&nbsp;        dockingSpot.setDescription(dto.getDescription());</b>
+<b class="nc">&nbsp;        dockingSpot.setServices(dto.getServices());</b>
+<b class="nc">&nbsp;        dockingSpot.setServicesPricing(dto.getServicesPricing());</b>
+<b class="nc">&nbsp;        dockingSpot.setPricePerNight(dto.getPricePerNight());</b>
+<b class="nc">&nbsp;        dockingSpot.setPricePerPerson(dto.getPricePerPerson());</b>
+&nbsp;
+&nbsp;        // Update the ID fields if provided.
+<b class="nc">&nbsp;        if (dto.getOwnerId() != null) {</b>
+<b class="nc">&nbsp;            dockingSpot.setOwnerId(dto.getOwnerId());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (dto.getPortId() != null) {</b>
+<b class="nc">&nbsp;            dockingSpot.setPortId(dto.getPortId());</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return dockingSpotsRepository.save(dockingSpot);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public DockingSpots getDockingSpotById(Long id) {
+<b class="nc">&nbsp;        return dockingSpotsRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Docking spot not found with id: &quot; + id));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DockingSpots&gt; getAllDockingSpots() {
+<b class="nc">&nbsp;        return dockingSpotsRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteDockingSpot(Long id) {
+<b class="nc">&nbsp;        if (!dockingSpotsRepository.existsById(id)) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Docking spot not found with id: &quot; + id);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        dockingSpotsRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;   @Override
+&nbsp;    public List&lt;DockingSpots&gt; getDockingSpotsByPortId(
+&nbsp;        Long portId,
+&nbsp;        Double minPrice,
+&nbsp;        Double maxPrice,
+&nbsp;        Boolean available,
+&nbsp;        List&lt;String&gt; services,
+&nbsp;        LocalDate startDate,
+&nbsp;        LocalDate endDate,
+&nbsp;        String sortBy,
+&nbsp;        String sortDirection
+&nbsp;    ) {
+&nbsp;        // Start with all docking spots for this port
+<b class="nc">&nbsp;        List&lt;DockingSpots&gt; spots = dockingSpotsRepository.findByPortId(portId);</b>
+&nbsp;
+&nbsp;        // Apply filters
+<b class="nc">&nbsp;        Stream&lt;DockingSpots&gt; filteredSpots = spots.stream();</b>
+&nbsp;
+&nbsp;        // Filter by price range
+<b class="nc">&nbsp;        if (minPrice != null) {</b>
+<b class="nc">&nbsp;            filteredSpots = filteredSpots.filter(spot -&gt; spot.getPricePerNight() &gt;= minPrice);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (maxPrice != null) {</b>
+<b class="nc">&nbsp;            filteredSpots = filteredSpots.filter(spot -&gt; spot.getPricePerNight() &lt;= maxPrice);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Filter by availability using date interval
+<b class="nc">&nbsp;        if (available != null &amp;&amp; startDate != null &amp;&amp; endDate != null) {</b>
+<b class="nc">&nbsp;            if (available) {</b>
+<b class="nc">&nbsp;                filteredSpots = filteredSpots.filter(spot -&gt; !hasBookingsInDateRange(spot, startDate, endDate));</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                filteredSpots = filteredSpots.filter(spot -&gt; hasBookingsInDateRange(spot, startDate, endDate));</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // Filter by services
+<b class="nc">&nbsp;        if (services != null &amp;&amp; !services.isEmpty()) {</b>
+<b class="nc">&nbsp;            filteredSpots = filteredSpots.filter(spot -&gt;</b>
+<b class="nc">&nbsp;                spot.getServices() != null &amp;&amp;</b>
+<b class="nc">&nbsp;                services.stream().allMatch(service -&gt;</b>
+<b class="nc">&nbsp;                    spot.getServices().contains(service)</b>
+&nbsp;                )
+&nbsp;            );
+&nbsp;        }
+&nbsp;
+&nbsp;        // Apply sorting
+<b class="nc">&nbsp;        if (sortBy != null &amp;&amp; !sortBy.isEmpty()) {</b>
+<b class="nc">&nbsp;            Comparator&lt;DockingSpots&gt; comparator = switch (sortBy.toLowerCase()) {</b>
+<b class="nc">&nbsp;                case &quot;price&quot; -&gt; Comparator.comparing(DockingSpots::getPricePerNight);</b>
+<b class="nc">&nbsp;                default -&gt; null;</b>
+&nbsp;            };
+&nbsp;
+<b class="nc">&nbsp;            if (comparator != null) {</b>
+<b class="nc">&nbsp;                if (&quot;desc&quot;.equalsIgnoreCase(sortDirection)) {</b>
+<b class="nc">&nbsp;                    comparator = comparator.reversed();</b>
+&nbsp;                }
+<b class="nc">&nbsp;                filteredSpots = filteredSpots.sorted(comparator);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return filteredSpots.collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;DockingSpots&gt; getDockingSpotsByOwnerId(Long ownerId) {
+<b class="nc">&nbsp;        return dockingSpotsRepository.findByOwnerId(ownerId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean hasBookingsInDateRange(DockingSpots spot, LocalDate startDate, LocalDate endDate) {
+<b class="nc">&nbsp;        if (startDate == null || endDate == null) {</b>
+<b class="nc">&nbsp;            return false; // Can&#39;t check availability without date range</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // You&#39;ll need to add this repository method
+<b class="nc">&nbsp;        List&lt;Booking&gt; bookings = bookingRepository.findOverlappingBookings(</b>
+<b class="nc">&nbsp;                spot.getId(), startDate, endDate);</b>
+<b class="nc">&nbsp;        return !bookings.isEmpty();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DockingSpotService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.services</a>
+</div>
+
+<h1>Coverage Summary for Class: DockingSpotService (pw.react.backend.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DockingSpotService</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.services;
+&nbsp;
+&nbsp;import pw.react.backend.models.docks.DockingSpots;
+&nbsp;import pw.react.backend.web.DockingSpotDto;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public interface DockingSpotService {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new docking spot based on the given DTO.
+&nbsp;     *
+&nbsp;     * @param dockingSpotDto the DTO containing docking spot data
+&nbsp;     * @return the created DockingSpots entity
+&nbsp;     */
+&nbsp;    DockingSpots createDockingSpot(DockingSpotDto dockingSpotDto);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates an existing docking spot.
+&nbsp;     *
+&nbsp;     * @param id             the id of the docking spot to update
+&nbsp;     * @param dockingSpotDto the DTO containing updated data
+&nbsp;     * @return the updated DockingSpots entity
+&nbsp;     */
+&nbsp;    DockingSpots updateDockingSpot(Long id, DockingSpotDto dockingSpotDto);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a docking spot by its id.
+&nbsp;     *
+&nbsp;     * @param id the id of the docking spot
+&nbsp;     * @return the found DockingSpots entity
+&nbsp;     */
+&nbsp;    DockingSpots getDockingSpotById(Long id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all docking spots.
+&nbsp;     *
+&nbsp;     * @return list of DockingSpots entities
+&nbsp;     */
+&nbsp;    List&lt;DockingSpots&gt; getAllDockingSpots();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a docking spot by its id.
+&nbsp;     *
+&nbsp;     * @param id the id of the docking spot to delete
+&nbsp;     */
+&nbsp;    void deleteDockingSpot(Long id);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves docking spots associated with a specific port with optional filtering.
+&nbsp;     *
+&nbsp;     * @param portId the id of the port
+&nbsp;     * @param minPrice minimum price filter (optional)
+&nbsp;     * @param maxPrice maximum price filter (optional)
+&nbsp;     * @param available availability status filter (optional)
+&nbsp;     * @param sortBy field to sort results by (optional)
+&nbsp;     * @param sortDirection direction of sorting (asc/desc)
+&nbsp;     * @return filtered list of DockingSpots entities
+&nbsp;     */
+&nbsp;    List&lt;DockingSpots&gt; getDockingSpotsByPortId(
+&nbsp;            Long portId,
+&nbsp;            Double minPrice,
+&nbsp;            Double maxPrice,
+&nbsp;            Boolean available,
+&nbsp;            List&lt;String&gt; services,
+&nbsp;            LocalDate startDate,
+&nbsp;            LocalDate endDate,
+&nbsp;            String sortBy,
+&nbsp;            String sortDirection
+&nbsp;    );
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves all docking spots owned by a specific owner.
+&nbsp;     *
+&nbsp;     * @param ownerId the id of the owner
+&nbsp;     * @return list of DockingSpots entities owned by the given owner
+&nbsp;     */
+&nbsp;    List&lt;DockingSpots&gt; getDockingSpotsByOwnerId(Long ownerId);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

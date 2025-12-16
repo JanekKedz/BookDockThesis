@@ -73,8 +73,6 @@ public class PortService {
     }
 
     public List<Port> getPortsByOwnerId(Long ownerId) {
-        return portRepository.findAll().stream()
-                .filter(port -> port.getOwnerId().equals(ownerId))
-                .collect(Collectors.toList());
+        return portRepository.findByOwnerId(ownerId);
     }
 }
