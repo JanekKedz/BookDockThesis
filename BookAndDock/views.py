@@ -864,7 +864,7 @@ def delete_guide(request, guide_id):
 @login_required
 def guide_detail(request, guide_id):
     try:
-        response = requests.get(f'guides/{guide_id}')
+        response = requests.get(f"{settings.BACKEND_API_BASE}/guides/{guide_id}")
         if response.status_code != 200:
             return HttpResponse("Guide not found", status=response.status_code)
         guide = response.json()

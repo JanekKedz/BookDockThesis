@@ -5,8 +5,9 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from BookAndDock.models import Guide
 from unittest.mock import patch, Mock
+from django.test import tag
 
-
+@tag("unit")
 class EditorOnlyTests(TestCase):
     def setUp(self):
         self.client = Client()
