@@ -24,6 +24,7 @@
                         {% if request.session.role == 'EDITOR' %}
                             <a href="{% url 'profile_guides' %}">Guides</a>
                             <a href="{% url 'profile_articles' %}">Articles</a>
+                            <a href="{% url 'account' %}">Account</a>
                         {% endif %}
 
                         {% if request.session.role == 'ADMIN' %}
@@ -32,7 +33,7 @@
                             <a href="{% url 'manage_guides' %}">Guides</a>
                             <a href="{% url 'bookings' %}"> Bookings </a>
                         {% endif %}
-                        <a href="{% url 'account' %}">Account</a>
+
                     </div>
                 </div>
         {% else %}

@@ -217,11 +217,15 @@ def add_guide(request):
 
             publication_date = datetime.now().replace(microsecond=0).isoformat()
 
+            backend_author_id = request.session.get("backend_user_id")
+            if not backend_author_id:
+                return HttpResponseForbidden("No backend user id in session. Please log in again.")
+
             # Prepare JSON for external API
             api_payload = {
                 "title": guide.title,
                 "content": guide.description,
-                "authorId": request.user.id,  # assuming it matches external authorId
+                "authorId": backend_author_id,  # assuming it matches external authorId
                 "publicationDate": publication_date,  # adjust if field differs
                 "images": image_list,
                 "links": guide.links,   # Add logic if you have links field
@@ -234,6 +238,10 @@ def add_guide(request):
             try:
                 response = requests.post(f"{settings.BACKEND_API_BASE}/guides", json=api_payload)
                 print(response.text)
+                print("DJANGO user.id:", request.user.id)
+                print("BACKEND user_id:", request.session.get("backend_user_id"))
+                print("DJANGO email:", request.user.email)
+
                 if response.status_code in [200, 201]:
                     print("Guide synced to API successfully.")
                 else:
@@ -337,10 +345,14 @@ def modify_guide(request, pk):
 
             publication_date = datetime.now().replace(microsecond=0).isoformat()
 
+            backend_author_id = request.session.get("backend_user_id")
+            if not backend_author_id:
+                return HttpResponseForbidden("No backend user id in session. Please log in again.")
+
             api_payload = {
                 "title": guide.title,
                 "content": guide.description,
-                "authorId": request.user.id,
+                "authorId": backend_author_id,
                 "publicationDate": publication_date,
                 "images": image_ids,  # Now using external image IDs
                 "links": guide.links,
@@ -402,9 +414,12 @@ def post_comment(request, pk):
 
 @login_required
 def profile_guides(request):
-    user_id = request.user.id
+    backend_user_id = request.session.get("backend_user_id")
+    if not backend_user_id:
+        return HttpResponseForbidden("No backend user id in session. Please log in again.")
+
     response = requests.get(
-        f"{settings.BACKEND_API_BASE}/guides/author/{user_id}")
+        f"{settings.BACKEND_API_BASE}/guides/author/{backend_user_id}")
     guides = response.json()
 
     def convert_dates(guides_list):
@@ -441,8 +456,11 @@ def profile_guides(request):
 
 @login_required
 def profile_articles(request):
-    user_id = request.user.id
-    response = requests.get(f"{settings.BACKEND_API_BASE}/guides/author/{user_id}")
+    backend_user_id = request.session.get("backend_user_id")
+    if not backend_user_id:
+        return HttpResponseForbidden("No backend user id in session. Please log in again.")
+
+    response = requests.get(f"{settings.BACKEND_API_BASE}/guides/author/{backend_user_id}")
     articles = response.json()
 
     def convert_dates(guides_list):
@@ -665,6 +683,7 @@ def custom_login_editor(request):
         first_name = data.get('name', '') or ''
         last_name  = data.get('surname', '') or ''
         raw_role   = data.get('role')
+        backend_user_id = data.get("backend_user_id")
 
         safe_role = (raw_role or "").upper().strip()
         if safe_role != "EDITOR":
@@ -672,6 +691,9 @@ def custom_login_editor(request):
 
         if not username or not email:
             return JsonResponse({"error": "Missing username or email"}, status=400)
+
+        if not backend_user_id:
+            return JsonResponse({"error": "Missing backend_user_id"}, status=400)
 
         User = get_user_model()
 
@@ -700,6 +722,10 @@ def custom_login_editor(request):
 
         login(request, user)
         request.session["role"] = "EDITOR"
+
+        request.session["backend_user_id"] = int(backend_user_id)
+
+        print("User id:", backend_user_id)
 
         return JsonResponse({"message": "Logged in successfully"})
 

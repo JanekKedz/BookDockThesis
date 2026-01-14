@@ -48,6 +48,10 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(data => {
           const role = (data.role || '').toUpperCase().trim();
+          console.log("SPRING LOGIN DATA:", data);          // ✅ see what backend returns
+            const backendUserId = data.userId || data.user_id || data.id;
+            console.log("backendUserId extracted:", backendUserId);
+
           if (role !== "EDITOR") { alert("You are not an editor."); return; }
 
           return fetch("{% url 'custom_login_editor' %}", {
@@ -62,7 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
               email: data.email,
               name: data.name,
               surname: data.surname,
-              role: data.role
+              role: data.role,
+                backend_user_id: backendUserId
             })
           });
         })
@@ -72,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('POST /api/custom_login_editor/ status:', response.status);
             if (!response.ok) {
                 return response.text().then(text => {
+                    console.log("custom_login_editor body:", text);
                     console.error('custom_login_editor failed:', response.status, text);
                     alert('Login failed.');
                 });
