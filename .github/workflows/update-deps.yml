@@ -1,0 +1,22 @@
+name: Update Mobile Dependencies
+
+on: workflow_dispatch
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mobile-app branch
+        uses: actions/checkout@v4
+        with:
+          ref: mobile-app
+
+      - name: Install new testing library
+        run: npm install --save-dev @testing-library/react-native
+
+      - name: Commit updated package files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: Add @testing-library/react-native dependency"
+          branch: mobile-app
+          file_pattern: 'package.json package-lock.json'
