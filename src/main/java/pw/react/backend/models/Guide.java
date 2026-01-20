@@ -1,7 +1,5 @@
 package pw.react.backend.models;
 
-import java.util.stream.Collectors;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,25 +32,10 @@ public class Guide {
     @Column(name = "publication_date", nullable = false)
     private LocalDateTime publicationDate;
 
-    @JsonIgnore // Prevents the raw Image objects from appearing in your JSON
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "guide_image_ids",
-            joinColumns = @JoinColumn(name = "guide_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private List<Images> internalImages = new ArrayList<>();
-
-    @Transient // Hibernate ignores this; it's populated manually by @PostLoad
-    private List<String> imageIds = new ArrayList<>();
-
-    @PostLoad
-    private void onLoad() {
-        // Matches your Images.java field name: getBase64Image()
-        this.imageIds = internalImages.stream()
-                .map(Images::getBase64Image)
-                .collect(Collectors.toList());
-    }
+    @ElementCollection
+    @CollectionTable(name = "guide_image_ids", joinColumns = @JoinColumn(name = "guide_id"))
+    @Column(name = "image_id")
+    private List<String> imageIds = new ArrayList<String>();
 
     @ElementCollection
     @CollectionTable(name = "guide_links", joinColumns = @JoinColumn(name = "guide_id"))
