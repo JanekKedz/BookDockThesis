@@ -1,0 +1,282 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > BookingServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.services.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: BookingServiceImpl (pw.react.backend.services.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BookingServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    9,1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1,6%
+  </span>
+  <span class="absValue">
+    (1/61)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BookingServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    9,1%
+  </span>
+  <span class="absValue">
+    (1/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    1,6%
+  </span>
+  <span class="absValue">
+    (1/61)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.services.impl;
+&nbsp;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import pw.react.backend.web.BookingDto;
+&nbsp;import pw.react.backend.models.Booking;
+&nbsp;import pw.react.backend.repositories.BookingRepository;
+&nbsp;import pw.react.backend.services.BookingService;
+&nbsp;import pw.react.backend.models.docks.DockingSpots;
+&nbsp;
+&nbsp;import pw.react.backend.repositories.DockingSpotsRepository;
+&nbsp;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class BookingServiceImpl implements BookingService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private BookingRepository bookingRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DockingSpotsRepository dockingSpotsRepository;
+&nbsp;
+&nbsp;
+&nbsp;    private BookingDto toDto(Booking b) {
+<b class="nc">&nbsp;        return new BookingDto(</b>
+<b class="nc">&nbsp;                b.getId(),</b>
+<b class="nc">&nbsp;                b.getSailorId(),</b>
+<b class="nc">&nbsp;                b.getDockId(),</b>
+<b class="nc">&nbsp;                b.getStartDate(),</b>
+<b class="nc">&nbsp;                b.getEndDate(),</b>
+<b class="nc">&nbsp;                b.getPeople(),</b>
+<b class="nc">&nbsp;                b.getPaymentMethod(),</b>
+<b class="nc">&nbsp;                b.getPaymentStatus(),</b>
+<b class="nc">&nbsp;                b.getTotalPrice()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    private Booking toEntity(BookingDto dto) {
+<b class="nc">&nbsp;        Booking b = new Booking();</b>
+<b class="nc">&nbsp;        b.setSailorId(dto.getSailorId());</b>
+<b class="nc">&nbsp;        b.setDockId(dto.getDockId());</b>
+<b class="nc">&nbsp;        b.setStartDate(dto.getStartDate());</b>
+<b class="nc">&nbsp;        b.setEndDate(dto.getEndDate());</b>
+<b class="nc">&nbsp;        b.setPeople(dto.getPeople());</b>
+<b class="nc">&nbsp;        b.setPaymentMethod(dto.getPaymentMethod());</b>
+<b class="nc">&nbsp;        b.setPaymentStatus(dto.getPaymentStatus());</b>
+<b class="nc">&nbsp;        b.setTotalPrice(dto.getTotalPrice());</b>
+<b class="nc">&nbsp;        return b;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public void cancelBooking(Long id) {
+&nbsp;        // 1. Look up the booking
+<b class="nc">&nbsp;        Booking existing = bookingRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Booking not found: &quot; + id));</b>
+&nbsp;
+&nbsp;        // 2. Delete it outright
+<b class="nc">&nbsp;        bookingRepository.delete(existing);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public BookingDto createBooking(BookingDto dto) {
+&nbsp;        // 1. Ensure the dock exists
+<b class="nc">&nbsp;        Optional&lt;DockingSpots&gt; maybeSpot = dockingSpotsRepository.findById(dto.getDockId());</b>
+<b class="nc">&nbsp;        if (maybeSpot.isEmpty()) {</b>
+<b class="nc">&nbsp;            throw new IllegalArgumentException(&quot;Docking spot not found: &quot; + dto.getDockId());</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // 2. Check for overlapping bookings on that dock
+<b class="nc">&nbsp;        List&lt;Booking&gt; conflicts = bookingRepository.findOverlappingBookings(</b>
+<b class="nc">&nbsp;                dto.getDockId(),</b>
+<b class="nc">&nbsp;                dto.getStartDate(),</b>
+<b class="nc">&nbsp;                dto.getEndDate()</b>
+&nbsp;        );
+<b class="nc">&nbsp;        if (!conflicts.isEmpty()) {</b>
+<b class="nc">&nbsp;            throw new IllegalStateException(&quot;Docking spot &quot;</b>
+<b class="nc">&nbsp;                    + dto.getDockId()</b>
+&nbsp;                    + &quot; is already booked during &quot;
+<b class="nc">&nbsp;                    + dto.getStartDate()</b>
+&nbsp;                    + &quot; – &quot;
+<b class="nc">&nbsp;                    + dto.getEndDate());</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // 3. No conflict → save the new booking
+<b class="nc">&nbsp;        Booking bookingEntity = toEntity(dto);</b>
+<b class="nc">&nbsp;        Booking savedBooking = bookingRepository.save(bookingEntity);</b>
+&nbsp;
+&nbsp;        // 4. Return the saved booking as a DTO
+<b class="nc">&nbsp;        return toDto(savedBooking);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;BookingDto&gt; getAllBookings() {
+<b class="nc">&nbsp;        return bookingRepository.findAll().stream()</b>
+<b class="nc">&nbsp;                .map(this::toDto)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;BookingDto&gt; getBookingsBySailor(Long sailorId) {
+<b class="nc">&nbsp;        return bookingRepository.findBySailorId(sailorId).stream()</b>
+<b class="nc">&nbsp;                .map(this::toDto)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;BookingDto&gt; getBookingsByDock(Long dockId) {
+<b class="nc">&nbsp;        return bookingRepository.findByDockId(dockId).stream()</b>
+<b class="nc">&nbsp;                .map(this::toDto)</b>
+<b class="nc">&nbsp;                .collect(Collectors.toList());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public BookingDto getBookingById(Long id) {
+<b class="nc">&nbsp;        return bookingRepository.findById(id)</b>
+<b class="nc">&nbsp;                .map(this::toDto)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Booking not found&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public BookingDto updateBooking(Long id, BookingDto dto) {
+<b class="nc">&nbsp;        Booking existing = bookingRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new RuntimeException(&quot;Booking not found&quot;));</b>
+<b class="nc">&nbsp;        existing.setStartDate(dto.getStartDate());</b>
+<b class="nc">&nbsp;        existing.setEndDate(dto.getEndDate());</b>
+<b class="nc">&nbsp;        existing.setPeople(dto.getPeople());</b>
+<b class="nc">&nbsp;        existing.setPaymentMethod(dto.getPaymentMethod());</b>
+<b class="nc">&nbsp;        existing.setPaymentStatus(dto.getPaymentStatus());</b>
+<b class="nc">&nbsp;        Booking updated = bookingRepository.save(existing);</b>
+<b class="nc">&nbsp;        return toDto(updated);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteBooking(Long id) {
+<b class="nc">&nbsp;        bookingRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

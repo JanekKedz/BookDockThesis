@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > PortService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.services</a>
+</div>
+
+<h1>Coverage Summary for Class: PortService (pw.react.backend.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PortService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    44,4%
+  </span>
+  <span class="absValue">
+    (4/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    24,2%
+  </span>
+  <span class="absValue">
+    (8/33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.services;
+&nbsp;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import pw.react.backend.models.docks.Port;
+&nbsp;import pw.react.backend.repositories.PortRepository;
+&nbsp;import pw.react.backend.web.PortDto;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class PortService {
+&nbsp;
+&nbsp;    private final PortRepository portRepository;
+&nbsp;
+<b class="fc">&nbsp;    public PortService(PortRepository portRepository) {</b>
+<b class="fc">&nbsp;        this.portRepository = portRepository;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Port createPort(PortDto portDto) {
+<b class="nc">&nbsp;        Port port = mapToEntity(portDto);</b>
+<b class="nc">&nbsp;        return portRepository.save(port);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Port updatePort(Long id, PortDto portDto) {
+<b class="fc">&nbsp;        Optional&lt;Port&gt; existingPort = portRepository.findById(id);</b>
+<b class="pc">&nbsp;        if (existingPort.isPresent()) {</b>
+<b class="nc">&nbsp;            Port port = existingPort.get();</b>
+<b class="nc">&nbsp;            port.setName(portDto.getName());</b>
+<b class="nc">&nbsp;            port.setLocation(portDto.getLocation());</b>
+<b class="nc">&nbsp;            port.setDescription(portDto.getDescription());</b>
+<b class="nc">&nbsp;            port.setLatitude(portDto.getLatitude());</b>
+<b class="nc">&nbsp;            port.setLongitude(portDto.getLongitude());</b>
+<b class="nc">&nbsp;            return portRepository.save(port);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Port with id &quot; + id + &quot; not found.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Port getPortById(Long id) {
+<b class="nc">&nbsp;        return portRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Port with id &quot; + id + &quot; not found.&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Port&gt; getAllPorts() {
+<b class="nc">&nbsp;        return portRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void deletePort(Long id) {
+<b class="pc">&nbsp;        if (portRepository.existsById(id)) {</b>
+<b class="nc">&nbsp;            portRepository.deleteById(id);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Port with id &quot; + id + &quot; not found.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Port mapToEntity(PortDto portDto) {
+<b class="nc">&nbsp;        Port port = new Port();</b>
+<b class="nc">&nbsp;        port.setName(portDto.getName());</b>
+<b class="nc">&nbsp;        port.setLocation(portDto.getLocation());</b>
+<b class="nc">&nbsp;        port.setDescription(portDto.getDescription());</b>
+<b class="nc">&nbsp;        port.setOwnerId(portDto.getOwnerId());</b>
+<b class="nc">&nbsp;        port.setImageIds(portDto.getImageIds()); // This is crucial</b>
+<b class="nc">&nbsp;        port.setLatitude(portDto.getLatitude());</b>
+<b class="nc">&nbsp;        port.setLongitude(portDto.getLongitude());</b>
+<b class="nc">&nbsp;        return port;</b>
+&nbsp;    }
+&nbsp;    public Port approvePort(Long id) {
+<b class="nc">&nbsp;        Port port = getPortById(id);</b>
+<b class="nc">&nbsp;        port.setApproved(true);</b>
+<b class="nc">&nbsp;        return portRepository.save(port);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Port&gt; getPortsByOwnerId(Long ownerId) {
+<b class="fc">&nbsp;        return portRepository.findByOwnerId(ownerId);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

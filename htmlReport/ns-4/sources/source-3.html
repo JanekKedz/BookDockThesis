@@ -1,0 +1,217 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DockingSpotController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: DockingSpotController (pw.react.backend.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DockingSpotController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14,3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14,3%
+  </span>
+  <span class="absValue">
+    (2/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.controller;
+&nbsp;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import pw.react.backend.models.docks.DockingSpots;
+&nbsp;import pw.react.backend.services.DockingSpotService;
+&nbsp;import pw.react.backend.web.DockingSpotDto;
+&nbsp;
+&nbsp;import org.springframework.format.annotation.DateTimeFormat;
+&nbsp;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/docking-spots&quot;)
+&nbsp;public class DockingSpotController {
+&nbsp;
+&nbsp;    private final DockingSpotService dockingSpotService;
+&nbsp;
+<b class="fc">&nbsp;    public DockingSpotController(DockingSpotService dockingSpotService) {</b>
+<b class="fc">&nbsp;        this.dockingSpotService = dockingSpotService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Create a new docking spot.
+&nbsp;     *
+&nbsp;     * @param dockingSpotDto the data transfer object with docking spot data
+&nbsp;     * @return the created DockingSpots entity
+&nbsp;     */
+&nbsp;    @PostMapping
+&nbsp;    public ResponseEntity&lt;DockingSpots&gt; createDockingSpot(@RequestBody DockingSpotDto dockingSpotDto) {
+<b class="nc">&nbsp;        DockingSpots createdDockingSpot = dockingSpotService.createDockingSpot(dockingSpotDto);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(createdDockingSpot, HttpStatus.CREATED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Update an existing docking spot by id.
+&nbsp;     *
+&nbsp;     * @param id the id of the docking spot to update
+&nbsp;     * @param dockingSpotDto the DTO with updated docking spot data
+&nbsp;     * @return the updated DockingSpots entity
+&nbsp;     */
+&nbsp;    @PutMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;DockingSpots&gt; updateDockingSpot(@PathVariable Long id, @RequestBody DockingSpotDto dockingSpotDto) {
+<b class="nc">&nbsp;        DockingSpots updatedDockingSpot = dockingSpotService.updateDockingSpot(id, dockingSpotDto);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(updatedDockingSpot);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieve a docking spot by its id.
+&nbsp;     *
+&nbsp;     * @param id the id of the docking spot
+&nbsp;     * @return the found DockingSpots entity
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public ResponseEntity&lt;DockingSpots&gt; getDockingSpotById(@PathVariable Long id) {
+<b class="nc">&nbsp;        DockingSpots dockingSpot = dockingSpotService.getDockingSpotById(id);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(dockingSpot);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieve all docking spots.
+&nbsp;     *
+&nbsp;     * @return list of all DockingSpots entities
+&nbsp;     */
+&nbsp;    @GetMapping
+&nbsp;    public ResponseEntity&lt;List&lt;DockingSpots&gt;&gt; getAllDockingSpots() {
+<b class="nc">&nbsp;        List&lt;DockingSpots&gt; dockingSpots = dockingSpotService.getAllDockingSpots();</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(dockingSpots);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get docking spots by port id.
+&nbsp;     * * @param portId the id of the port
+&nbsp;     * @return list of DockingSpots entities associated with the port
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/port/{portId}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;DockingSpots&gt;&gt; getDockingSpotsByPortId(
+&nbsp;            @PathVariable Long portId,
+&nbsp;            @RequestParam(required = false) Double minPrice,
+&nbsp;            @RequestParam(required = false) Double maxPrice,
+&nbsp;            @RequestParam(required = false) Boolean available,
+&nbsp;            @RequestParam(required = false) List&lt;String&gt; services,
+&nbsp;            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+&nbsp;            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+&nbsp;            @RequestParam(required = false) String sortBy,
+&nbsp;            @RequestParam(required = false, defaultValue = &quot;asc&quot;) String sortDirection
+&nbsp;    ) {
+<b class="nc">&nbsp;        List&lt;DockingSpots&gt; dockingSpots = dockingSpotService.getDockingSpotsByPortId(</b>
+&nbsp;                portId, minPrice, maxPrice, available, services, startDate, endDate, sortBy, sortDirection
+&nbsp;        );
+<b class="nc">&nbsp;        return ResponseEntity.ok(dockingSpots);</b>
+&nbsp;    }
+&nbsp;    /**
+&nbsp;     * Get docking spots by owner id.
+&nbsp;     *
+&nbsp;     * @param ownerId the id of the owner
+&nbsp;     * @return list of DockingSpots entities owned by the owner
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/owner/{ownerId}&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;DockingSpots&gt;&gt; getDockingSpotsByOwnerId(@PathVariable Long ownerId) {
+<b class="nc">&nbsp;        List&lt;DockingSpots&gt; dockingSpots = dockingSpotService.getDockingSpotsByOwnerId(ownerId);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(dockingSpots);</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;/**
+&nbsp; * Retrieve all docking spots.
+&nbsp; *
+&nbsp; * @return list of all DockingSpots entities
+&nbsp; */
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.services</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (pw.react.backend.services)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.services;
+&nbsp;
+&nbsp;
+&nbsp;import pw.react.backend.models.user.User;
+&nbsp;import pw.react.backend.services.verification.VerificationService;
+&nbsp;import pw.react.backend.web.UserDto;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service interface for managing users.
+&nbsp; * &lt;p&gt;
+&nbsp; * Implementations of this interface should provide methods for user registration, retrieval, update, and deletion.
+&nbsp; * Additionally, it should handle user verification using the provided verification service.
+&nbsp; */
+&nbsp;public interface UserService {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Verifies the given user using the provided verification service.
+&nbsp;     *
+&nbsp;     * @param verification the verification service to use
+&nbsp;     * @param user the user to verify
+&nbsp;     */
+&nbsp;    void verifyUser(VerificationService verification, User user);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Registers a new user.
+&nbsp;     *
+&nbsp;     * @param user the user data transfer object containing the user details
+&nbsp;     * @return the registered user
+&nbsp;     */
+&nbsp;    User register(UserDto user);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a user by their email or phone number.
+&nbsp;     *
+&nbsp;     * @param email the email of the user to retrieve
+&nbsp;     * @param verification the verification service to use
+&nbsp;     * @return the retrieved user
+&nbsp;     */
+&nbsp;    User getUserByEmailOrPhoneNumber(String email, VerificationService verification);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deletes a user by their email.
+&nbsp;     *
+&nbsp;     * @param currentUser the current user to delete
+&nbsp;     * @param verification the verification service to use
+&nbsp;     * @return true if the user was successfully deleted, false otherwise
+&nbsp;     */
+&nbsp;    boolean deleteUserByEmail(User currentUser, VerificationService verification);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Updates the details of an existing user.
+&nbsp;     *
+&nbsp;     * @param currentUser the current user to update
+&nbsp;     * @param user the user data transfer object containing the updated user details
+&nbsp;     * @param verification the verification service to use
+&nbsp;     * @return the updated user
+&nbsp;     */
+&nbsp;    User updateUser(User currentUser, UserDto user, VerificationService verification);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Retrieves a user by their ID.
+&nbsp;     *
+&nbsp;     * @param id the ID of the user to retrieve
+&nbsp;     * @return the retrieved user
+&nbsp;     */
+&nbsp;    User getUserById(Long id);
+&nbsp;    /**
+&nbsp;     * Retrieves all users.
+&nbsp;     *
+&nbsp;     * @return all lists of users
+&nbsp;     */
+&nbsp;    List&lt;User&gt; getAllUsers();;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>

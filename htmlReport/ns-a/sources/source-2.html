@@ -1,0 +1,212 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Port</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pw.react.backend.models.docks</a>
+</div>
+
+<h1>Coverage Summary for Class: Port (pw.react.backend.models.docks)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Port</td>
+<td class="coverageStat">
+  <span class="percent">
+    81,2%
+  </span>
+  <span class="absValue">
+    (13/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/92)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (14/21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Port$HibernateInstantiator$yXVRXTsa</td>
+  </tr>
+  <tr>
+    <td class="name">Port$HibernateProxy$Je6yF3nN</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    81,2%
+  </span>
+  <span class="absValue">
+    (13/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/92)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (14/21)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pw.react.backend.models.docks;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Arrays;
+&nbsp;
+&nbsp;import pw.react.backend.models.user.User;
+&nbsp;import pw.react.backend.models.docks.DockingSpots;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;ports&quot;) 
+<b class="pc">&nbsp;@Data</b>
+<b class="nc">&nbsp;@AllArgsConstructor</b>
+<b class="fc">&nbsp;@NoArgsConstructor</b>
+&nbsp;public class Port{
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<b class="fc">&nbsp;    private Long id;</b>
+&nbsp;
+<b class="fc">&nbsp;    private String name;</b>
+<b class="fc">&nbsp;    private String location;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;latitude&quot;)
+<b class="fc">&nbsp;    private Double latitude;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;longitude&quot;)
+<b class="fc">&nbsp;    private Double longitude;</b>
+&nbsp;
+<b class="fc">&nbsp;    private String description;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;owner_id&quot;)
+<b class="fc">&nbsp;    private Long ownerId;</b>
+&nbsp;
+<b class="fc">&nbsp;    @Column(name = &quot;image_ids&quot;)</b>
+<b class="fc">&nbsp;    private String imageIdsStr = &quot;&quot;;</b>
+&nbsp;
+<b class="fc">&nbsp;    @Transient</b>
+&nbsp;    private List&lt;String&gt; imageIds = new ArrayList&lt;&gt;();
+&nbsp;
+&nbsp;    // Convert string to list when entity is loaded
+&nbsp;    @PostLoad
+&nbsp;    private void onLoad() {
+<b class="nc">&nbsp;        if (imageIdsStr != null &amp;&amp; !imageIdsStr.isEmpty()) {</b>
+<b class="nc">&nbsp;            imageIds = new ArrayList&lt;&gt;(Arrays.asList(imageIdsStr.split(&quot;,&quot;)));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Convert list to string before saving
+&nbsp;    @PrePersist
+&nbsp;    @PreUpdate
+&nbsp;    private void onSave() {
+<b class="nc">&nbsp;        if (imageIds != null &amp;&amp; !imageIds.isEmpty()) {</b>
+<b class="nc">&nbsp;            imageIdsStr = String.join(&quot;,&quot;, imageIds);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            imageIdsStr = &quot;&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // Keep the same getter and setter for backward compatibility
+&nbsp;    public List&lt;String&gt; getImageIds() {
+<b class="fc">&nbsp;        return imageIds;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setImageIds(List&lt;String&gt; imageIds) {
+<b class="nc">&nbsp;        this.imageIds = imageIds != null ? imageIds : new ArrayList&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    private boolean isApproved;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-12-16 01:39</div>
+</div>
+</body>
+</html>
