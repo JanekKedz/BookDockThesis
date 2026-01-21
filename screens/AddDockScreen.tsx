@@ -81,21 +81,21 @@ export default function AddDockScreen({ navigation, route }: any) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Services Pricing"
+        placeholder="Services Price Per Night"
         value={servicesPricing}
         onChangeText={setServicesPricing}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
-        placeholder="Price Per Night"
+        placeholder="Mooring Price Per Night (Base)"
         value={pricePerNight}
         onChangeText={setPricePerNight}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
-        placeholder="Price Per Person"
+        placeholder="Crew Price Per Person, Per Night (Optional)"
         value={pricePerPerson}
         onChangeText={setPricePerPerson}
         keyboardType="numeric"

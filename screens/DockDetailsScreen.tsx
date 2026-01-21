@@ -221,9 +221,19 @@ export default function DockDetailsScreen({ route, navigation }: Props) {
             {/* Price + Book */}
             <View style={styles.priceBookContainer}>
               <View style={styles.priceContainer}>
-                <Text style={styles.priceLabel}>Price</Text>
+                <Text style={styles.priceLabel}>-----------------------</Text>
+                <Text style={styles.priceLabel}>Mooring price</Text>
                 <Text style={styles.priceValue}>{spot.pricePerNight} PLN</Text>
-                <Text style={styles.priceSub}>per night, per person</Text>
+                <Text style={styles.priceSub}>per night</Text>
+                {spot.pricePerPerson != 0 && (
+                  <>
+                    <Text style={styles.priceLabel}>-----------------------</Text>
+                    <Text style={styles.priceLabel}>+ Additional crew price</Text>
+                    <Text style={styles.priceValue}>{spot.pricePerPerson} PLN</Text>
+                    <Text style={styles.priceSub}>per night, per person</Text>
+                  </>
+                )}
+                <Text style={styles.priceLabel}>-----------------------</Text>
                 <Text style={styles.priceLabel}>+ Services</Text>
                 <Text style={styles.priceValue}>{spot.servicesPricing} PLN</Text>
                 <Text style={styles.priceSub}>per night</Text>
@@ -236,7 +246,8 @@ export default function DockDetailsScreen({ route, navigation }: Props) {
                       dockId: spot.id,
                       fromDate: fromDate,
                       toDate: toDate,
-                      price: spot.pricePerNight,
+                      pricePerNight: spot.pricePerNight,
+                      pricePerPerson: spot.pricePerPerson,
                       servicesPricing: spot.servicesPricing,
                     });
                   } else {

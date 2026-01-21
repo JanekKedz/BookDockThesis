@@ -15,11 +15,68 @@ export default function GuideDetailsScreen({ route }: Props) {
     useEffect(() => {
         const fetchGuideDetails = async () => {
             try {
+                // 1. Fetch Guide Basic Details
                 const res = await fetch(`${BACKEND_URL}/guides/${guideId}`);
-                const data = await res.json();
-                setGuide(data);
+                const guideData = await res.json();
+
+                // 2. Fetch and Process Images
+                // The guideData.images field contains a list of image IDs (strings)
+                let finalImages: string[] = [];
+                const imageIds = guideData.images;
+
+                if (imageIds && Array.isArray(imageIds)) {
+                    for (const imageId of imageIds) {
+                        try {
+                            const imgRes = await fetch(`${BACKEND_URL}/images/${imageId}`);
+                            if (imgRes.ok) {
+                                const imgData = await imgRes.json();
+                                // The endpoint returns a single image object
+                                const items = Array.isArray(imgData) ? imgData : [imgData];
+
+                                for (const item of items) {
+                                    // 1. Get raw b64 from item
+                                    let raw_b64 = item?.base64image || item?.base64Image;
+                                    
+                                    // Fallback if item itself is string
+                                    if (!raw_b64 && typeof item === 'string') {
+                                         raw_b64 = item;
+                                    }
+
+                                    if (raw_b64) {
+                                        let base64_data = raw_b64;
+                                        try {
+                                            // Try parsing as nested JSON (if stringified)
+                                            const nested = JSON.parse(raw_b64);
+                                            
+                                            if (nested && typeof nested === 'object') {
+                                                base64_data = nested.base64image || nested.base64Image || null;
+                                            } else {
+                                                base64_data = null;
+                                            }
+                                        } catch (e) {
+                                             // It's likely already a base64 string
+                                        }
+
+                                        if (base64_data) {
+                                             if (!base64_data.startsWith("data:image")) {
+                                                 base64_data = `data:image/png;base64,${base64_data}`;
+                                             }
+                                             finalImages.push(base64_data);
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (imgErr) {
+                            console.error(`Failed to fetch image ${imageId}:`, imgErr);
+                        }
+                    }
+                }
+
+                // 3. Update State
+                setGuide({ ...guideData, images: finalImages });
+
             } catch (err) {
-                Alert.alert("Failed to fetch guide details:", err);
+                Alert.alert("Failed to fetch guide details:", String(err));
             }
         };
 
@@ -35,36 +92,11 @@ export default function GuideDetailsScreen({ route }: Props) {
         );
     }
 
-    const getImageSource = () => {
-        if (!guide.images || guide.images.length === 0) {
-            return null;
-        }
-
-        let imageData = guide.images[0];
-
-        // If it's a string that looks like a JSON object (starts with '{'), try to parse it
-        if (typeof imageData === 'string' && imageData.trim().startsWith('{')) {
-            try {
-                // Replace single quotes with double quotes if necessary to make it valid JSON
-                const jsonString = imageData.replace(/'/g, '"');
-                const parsed = JSON.parse(jsonString);
-                if (parsed.base64Image) {
-                    imageData = parsed.base64Image;
-                }
-            } catch (e) {
-                console.log("Error parsing image JSON string:", e);
-            }
-        }
-
-        // If we have a base64 string
-        if (typeof imageData === 'string' && imageData.length > 100) {
-            return { uri: `data:image/png;base64,${imageData}` };
-        }
-        
-        return null;
-    };
-
-    const imageSource = getImageSource();
+    // Since images are already processed and normalized in the useEffect,
+    // we can directly use the first image if available.
+    const imageSource = (guide.images && guide.images.length > 0) 
+        ? { uri: guide.images[0] } 
+        : null;
 
     const handleLinkPress = (url: string) => {
         Linking.openURL(url).catch(err => console.error("Couldn't load page", err));

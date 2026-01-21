@@ -14,24 +14,14 @@ export default function GuideCard({ guide, onPress }: Props) {
     if (guide.images && guide.images.length > 0) {
         let imageData = guide.images[0];
 
-        // If it's a string that looks like a JSON object (starts with '{'), try to parse it
-        if (typeof imageData === 'string' && imageData.trim().startsWith('{')) {
-            try {
-                // Replace single quotes with double quotes if necessary to make it valid JSON
-                // (Handling potential formatting issues from the backend)
-                const jsonString = imageData.replace(/'/g, '"');
-                const parsed = JSON.parse(jsonString);
-                if (parsed.base64Image) {
-                    imageData = parsed.base64Image;
-                }
-            } catch (e) {
-                console.log("Error parsing image JSON string:", e);
+        if (typeof imageData === 'string' && imageData.length > 20) {
+            // Check if it's already a data URI
+            if (imageData.startsWith('data:image')) {
+                imageSource = { uri: imageData };
+            } else {
+                // If it's a raw base64 string without prefix
+                imageSource = { uri: `data:image/png;base64,${imageData}` };
             }
-        }
-
-        // If we have a base64 string (either raw or extracted)
-        if (typeof imageData === 'string' && imageData.length > 100) { // Simple check to ensure it's not empty or just "{"
-            imageSource = { uri: `data:image/png;base64,${imageData}` };
         }
     }
 

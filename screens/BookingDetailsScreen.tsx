@@ -34,7 +34,8 @@ export default function BookingDetailsScreen() {
   const [showToPicker, setShowToPicker] = useState(false);
   const [totalCost, setTotalCost] = useState(0);
   const [numPeople, setNumPeople] = useState("1");
-  const { price } = route.params;
+  const { pricePerNight } = route.params;
+  const { pricePerPerson } = route.params;
   const servicesPricing = route.params.servicesPricing ?? 0;
   const { user } = useAuth();
 
@@ -148,8 +149,9 @@ export default function BookingDetailsScreen() {
   );
 
   useEffect(() => {
-    setTotalCost((diffDays * price * parseInt(numPeople)) + (diffDays * servicesPricing));
-  }, [fromDate, toDate, numPeople, price, diffDays, servicesPricing]);
+    setTotalCost((diffDays * pricePerNight) + (diffDays * pricePerPerson * parseInt(numPeople))
+     + (diffDays * servicesPricing));
+  }, [fromDate, toDate, numPeople, pricePerNight, pricePerPerson, diffDays, servicesPricing]);
 
   return (
     <View style={styles.container}>
@@ -240,9 +242,11 @@ export default function BookingDetailsScreen() {
       {/* Price + Book */}
       <View style={styles.priceBookContainer}>
         <View style={styles.priceContainer}>
-          <Text style={styles.priceLabel}>Mooring price per Night, per Person</Text>
-          <Text style={styles.priceValue}>{price} PLN</Text>
-          <Text style={styles.priceLabel}>Additional Services price per Night</Text>
+          <Text style={styles.priceLabel}>Mooring price per Night</Text>
+          <Text style={styles.priceValue}>{pricePerNight} PLN</Text>
+          <Text style={styles.priceLabel}>Additional price per Person, per Night</Text>
+          <Text style={styles.priceValue}>{pricePerPerson} PLN</Text>
+          <Text style={styles.priceLabel}>Services price per Night</Text>
           <Text style={styles.priceValue}>{servicesPricing} PLN</Text>
           <Text style={styles.priceLabel}>Nights</Text>
           <Text style={styles.priceValue}>{diffDays}</Text>

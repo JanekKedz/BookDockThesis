@@ -19,12 +19,68 @@ export default function GuideListingsScreen({ navigation }: Props) {
         const fetchGuides = async () => {
             try {
                 const res = await fetch(`${BACKEND_URL}/guides/approved`);
-                const data = await res.json();
+                const guidesData = await res.json();
+
+                const guidesWithImages: Guide[] = [];
+
+                for (const guide of guidesData) {
+                    let finalImages: string[] = [];
+                    // Assume guide.images is a list of image IDs (strings)
+                    const imageIds = guide.images;
+
+                    if (Array.isArray(imageIds)) {
+                        for (const imageId of imageIds) {
+                            try {
+                                const imgRes = await fetch(`${BACKEND_URL}/images/${imageId}`);
+                                if (imgRes.ok) {
+                                    const imgData = await imgRes.json();
+                                    const items = Array.isArray(imgData) ? imgData : [imgData];
+
+                                    for (const item of items) {
+                                        // 1. Get raw b64 from item
+                                        let raw_b64 = item?.base64image || item?.base64Image;
+                                        
+                                        // Fallback if item itself is string
+                                        if (!raw_b64 && typeof item === 'string') {
+                                             raw_b64 = item;
+                                        }
+
+                                        if (raw_b64) {
+                                            let base64_data = raw_b64;
+                                            try {
+                                                // Try parsing as nested JSON (if stringified)
+                                                const nested = JSON.parse(raw_b64);
+                                                
+                                                if (nested && typeof nested === 'object') {
+                                                    base64_data = nested.base64image || nested.base64Image || null;
+                                                } else {
+                                                    base64_data = null;
+                                                }
+                                            } catch (e) {
+                                                 // It's likely already a base64 string
+                                            }
+
+                                            if (base64_data) {
+                                                 if (!base64_data.startsWith("data:image")) {
+                                                     base64_data = `data:image/png;base64,${base64_data}`;
+                                                 }
+                                                 finalImages.push(base64_data);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (imgErr) {
+                                console.error(`Failed to fetch image ${imageId} for guide ${guide.id}:`, imgErr);
+                            }
+                        }
+                    }
+
+                    guidesWithImages.push({ ...guide, images: finalImages });
+                }
                 
-                // The API returns the structure matching our Guide type (images is string[]),
-                // so no transformation of the images array is needed.
-                setGuides(data);
-                setFilteredGuides(data); 
+                setGuides(guidesWithImages);
+                setFilteredGuides(guidesWithImages);
+
             } catch (err) {
                 console.error("Failed to fetch guides:", err);
             }
@@ -58,7 +114,7 @@ export default function GuideListingsScreen({ navigation }: Props) {
             <View style={styles.searchSection}>
                 <TextInput
                     style={styles.searchInput}
-                    placeholder="Search by title"
+                    placeholder="Search by title, content"
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                 />

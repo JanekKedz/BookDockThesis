@@ -23,7 +23,13 @@ export default function DockCard({ spot, onPress }: Props) {
                 </View>
             </View>
             <View style={styles.bottomRow}>
-                <Text style={styles.price}>{spot.pricePerNight} PLN</Text>
+                <View>
+                    <Text style={styles.price}>{spot.pricePerNight} PLN/Night</Text>
+                    {spot.pricePerPerson != 0 && (
+                        <Text style={styles.price}>+{spot.pricePerPerson} PLN/Person/Night</Text>
+                    )}
+                    <Text style={styles.price}>+{spot.servicesPricing} PLN/Night</Text>
+                </View>
                 <TouchableOpacity style={styles.detailsButton} onPress={onPress}>
                     <Text style={styles.detailsText}>View Details &gt;</Text>
                 </TouchableOpacity>
