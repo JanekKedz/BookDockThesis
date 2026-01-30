@@ -129,9 +129,9 @@ export default function BookingListingsScreen() {
           filteredBookings.map((booking) => (
             <View key={booking.id} style={styles.bookingCard}>
               <Text style={styles.bookingTitle}>Booking #{booking.id}</Text>
-              <Text style={styles.bookingLabel}>
+              {/*<Text style={styles.bookingLabel}>
                 Sailor ID: <Text style={styles.bookingValue}>{booking.sailorId}</Text>
-              </Text>
+              </Text>*/}
               <Text style={styles.bookingLabel}>
                 Dock ID: <Text style={styles.bookingValue}>{booking.dockId}</Text>
               </Text>

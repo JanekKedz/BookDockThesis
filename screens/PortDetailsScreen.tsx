@@ -128,7 +128,7 @@ export default function PortDetailsScreen({ route, navigation }: Props) {
                 <View style={styles.section}>
                     <Text style={styles.title}>{port.name}</Text>
                     <Text style={styles.subtitle}>Location: {port.location}</Text>
-                    <Text style={styles.subtitle}>{port.latitude}, {port.longitude}</Text>
+                    {/* <Text style={styles.subtitle}>{port.latitude}, {port.longitude}</Text> */}
                 </View>
                 {/* Images */}
                 <View style={styles.section}>
